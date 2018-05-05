@@ -1,0 +1,29 @@
+{
+  "name": "somebodyssomebody-api",
+  "version": "1.0.0",
+  "description": "Somebodys Somebody API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michalmikolajczyk/somebodyssomebody-api.git"
+  },
+  "keywords": [
+    "somebody",
+    "api",
+    "art"
+  ],
+  "author": "Michal Mikolajczyk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michalmikolajczyk/somebodyssomebody-api/issues"
+  },
+  "homepage": "https://github.com/michalmikolajczyk/somebodyssomebody-api#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "sqlite3": "^4.0.0"
+  }
+}
