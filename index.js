@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 var join = require('path').join
-const port = 3000 || process.env.PORT;
+const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 var helmet = require('helmet');
 var sqlite3 = require('sqlite3').verbose();
@@ -93,5 +93,5 @@ app.get('/robots.txt', function(req, res, next) {
 });
 
 app.listen(port, () => {
-  console.log("Somebody is listening at http://127.0.0.1:" + port);
+  console.log("Somebody is listening at port " + port);
 });
