@@ -1,25 +1,31 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 var join = require('path').join
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 var helmet = require('helmet');
-var sqlite3 = require('sqlite3').verbose();
+const pg = require('pg');
+pg.defaults.ssl = true;
+const Client = pg.Client;
 
 /**
  * DATABASE INIT
  */
 
-var db = new sqlite3.Database(join(__dirname, 'sqlitedb'));
+const connectionString = process.env.DATABASE_URL;
+
+const client = new Client({
+  connectionString: connectionString,
+})
+client.connect();
 
 const somebody = `(
-  name TEXT,
-  PRIMARY KEY(name)
+  name TEXT PRIMARY KEY NOT NULL
 )`;
 
-db.serialize(function() {
-  db.run(`CREATE TABLE IF NOT EXISTS somebodys ${somebody}`);
-});
+client.query(`CREATE TABLE IF NOT EXISTS somebodys ${somebody}`);
+
 
 /**
  * MIDDLEWARE
@@ -55,7 +61,7 @@ app.use(function(req, res, next) {
 // app.use('/', express.static(join(__dirname, '../public_static')));
 
 app.get('/somebody', function(req, res, next) {
-  return db.get(`SELECT * FROM somebodys ORDER BY RANDOM() LIMIT 1;`, function (e, result) {
+  return client.query(`SELECT * FROM somebodys ORDER BY RANDOM() LIMIT 1;`, function (e, result) {
     if (e) {
       console.log(e);
       return res.send(e);
@@ -66,13 +72,9 @@ app.get('/somebody', function(req, res, next) {
 
 app.post('/somebody', function(req, res, next) {
   if (typeof req.body.name === 'string') {
-    const data = { $name: req.body.name };
-    return db.run(`
-      INSERT OR IGNORE INTO somebodys(
-        name
-      ) VALUES (
-        $name
-      )`, data, function (e) {
+    const data = [ req.body.name ];
+    return client.query(`
+      INSERT INTO somebodys(name) VALUES($1) ON CONFLICT(name) DO NOTHING`, data, function (e) {
       if (e) {
         console.log(e);
         return res.send(e);
