@@ -66,7 +66,7 @@ app.get('/somebody', function(req, res, next) {
       console.log(e);
       return res.send(e);
     }
-    return res.send(result);
+    return res.send(result.rows[0]);
   });
 });
 
