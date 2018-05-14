@@ -70,6 +70,16 @@ app.get('/somebody', function(req, res, next) {
   });
 });
 
+app.get('/everybody', function(req, res, next) {
+  return client.query(`SELECT * FROM somebodys ORDER BY RANDOM() LIMIT 144;`, function (e, result) {
+    if (e) {
+      console.log(e);
+      return res.send(e);
+    }
+    return res.send(result.rows);
+  });
+});
+
 app.post('/somebody', function(req, res, next) {
   if (typeof req.body.name === 'string') {
     const data = [ req.body.name ];
